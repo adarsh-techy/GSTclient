@@ -1,5 +1,3 @@
-
-
 export type GstnErrorAction =
   | 'none'
   | 'reauthenticate'
@@ -18,100 +16,53 @@ export interface GstnErrorDetail {
 }
 
 export interface ApiError {
-  
   message: string;
-  
   code?: string;
-  
   action: GstnErrorAction;
-  
   retryable: boolean;
-  
   details: GstnErrorDetail[];
-  
   reference?: string;
-  
   isGstn: boolean;
   httpStatus?: number;
-
   portalMessage?: string;
-  
   operation?: string;
 }
 
 interface RawResponse {
   response?: {
     status?: number;
-    data?: {
-      error?: string;
-      code?: string;
-      message?: string;
-      action?: string;
-      retryable?: boolean;
-      details?: GstnErrorDetail[];
-      reference?: string;
-      portalMessage?: string;
-      operation?: string;
-    };
+    data?: unknown;
   };
 }
 
-export function apiError(err: unknown): ApiError {
-  const res = (err as RawResponse)?.response;
-  const raw = res?.data as unknown;
-  const httpStatus = res?.status;
-
-  if (typeof raw === 'string' && raw.trim()) {
-    return {
-      message: raw.trim(), action: 'none', retryable: false, details: [], isGstn: false, httpStatus,
-    };
-  }
-  const data = (raw && typeof raw === 'object' ? raw : undefined) as NonNullable<RawResponse['response']>['data'];
-
-  if (data?.error === 'GSTN_ERROR') {
-    return {
-      message: data.message || 'The GST portal rejected the request.',
-      code: data.code ?? undefined,
-      action: (data.action as GstnErrorAction) ?? 'none',
-      retryable: data.retryable ?? false,
-      details: data.details ?? [],
-      reference: data.reference ?? undefined,
-      isGstn: true,
-      httpStatus,
-      portalMessage: data.portalMessage ?? undefined,
-      operation: data.operation ?? undefined,
-    };
-  }
-
-  const serverText = data?.message || data?.error;
-  if (!serverText) {
-    const transport = describeTransportFailure(httpStatus);
-    if (transport) {
-      return {
-        message: transport.message,
-        action: transport.retryable ? 'retry' : 'none',
-        retryable: transport.retryable,
-        details: [], isGstn: false, httpStatus,
-      };
+function extractMessageString(raw: unknown): string | undefined {
+  if (!raw) return undefined;
+  if (typeof raw === 'string') return raw.trim() || undefined;
+  if (typeof raw === 'object') {
+    const obj = raw as Record<string, unknown>;
+    if (typeof obj.message === 'string' && obj.message.trim()) return obj.message.trim();
+    if (typeof obj.error === 'string' && obj.error.trim()) return obj.error.trim();
+    if (typeof obj.detail === 'string' && obj.detail.trim()) return obj.detail.trim();
+    if (typeof obj.title === 'string' && obj.title.trim()) {
+      return typeof obj.detail === 'string' ? `${obj.title}: ${obj.detail}` : obj.title;
+    }
+    if (obj.error && typeof obj.error === 'object') {
+      const nested = extractMessageString(obj.error);
+      if (nested) return nested;
+    }
+    if (obj.errors && typeof obj.errors === 'object') {
+      const errList = Object.values(obj.errors as Record<string, unknown>).flat();
+      const first = errList.find((item) => typeof item === 'string' && item.trim());
+      if (typeof first === 'string') return first.trim();
     }
   }
-
-  const message = serverText || (err as Error)?.message || 'Something went wrong.';
-  return {
-    message,
-    code: data?.code ?? (typeof data?.error === 'string' && data.error !== message ? data.error : undefined),
-    action: 'none',
-    retryable: false,
-    details: data?.details ?? [],
-    isGstn: false,
-    httpStatus,
-  };
+  return undefined;
 }
 
 function describeTransportFailure(status?: number): { message: string; retryable: boolean } | null {
   if (status === undefined) {
     return {
-      message: 'Could not reach the server. Check that GSTAutoPilot is running and that you are on the network.',
+      message: 'Could not reach the server. Check that your connection is active and backend is running.',
       retryable: true,
     };
   }
@@ -124,19 +75,83 @@ function describeTransportFailure(status?: number): { message: string; retryable
         retryable: true,
       };
     case 500:
-      return { message: 'The server hit an internal error (HTTP 500). The details are in the server log.', retryable: false };
+      return { message: 'The server hit an internal error (HTTP 500). Please check backend logs.', retryable: false };
     case 401:
     case 403:
       return { message: 'Your session is no longer valid. Sign in again.', retryable: false };
     case 404:
-      return { message: 'That was not found on the server (HTTP 404).', retryable: false };
+      return { message: 'The requested resource or endpoint was not found on the server (HTTP 404).', retryable: false };
     default:
       return null;
   }
 }
 
+export function apiError(err: unknown): ApiError {
+  const res = (err as RawResponse)?.response;
+  const raw = res?.data;
+  const httpStatus = res?.status;
+
+  if (typeof raw === 'string' && raw.trim()) {
+    return {
+      message: raw.trim(),
+      action: 'none',
+      retryable: false,
+      details: [],
+      isGstn: false,
+      httpStatus,
+    };
+  }
+
+  const data = (raw && typeof raw === 'object' ? raw : undefined) as Record<string, any> | undefined;
+
+  if (data?.error === 'GSTN_ERROR' || data?.code === 'GSTN_ERROR') {
+    return {
+      message: extractMessageString(data) || 'The GST portal rejected the request.',
+      code: typeof data.code === 'string' ? data.code : undefined,
+      action: (data.action as GstnErrorAction) ?? 'none',
+      retryable: data.retryable ?? false,
+      details: Array.isArray(data.details) ? data.details : [],
+      reference: typeof data.reference === 'string' ? data.reference : undefined,
+      isGstn: true,
+      httpStatus,
+      portalMessage: typeof data.portalMessage === 'string' ? data.portalMessage : undefined,
+      operation: typeof data.operation === 'string' ? data.operation : undefined,
+    };
+  }
+
+  const serverText = extractMessageString(data);
+  if (!serverText) {
+    const transport = describeTransportFailure(httpStatus);
+    if (transport) {
+      return {
+        message: transport.message,
+        action: transport.retryable ? 'retry' : 'none',
+        retryable: transport.retryable,
+        details: [],
+        isGstn: false,
+        httpStatus,
+      };
+    }
+  }
+
+  const fallbackMsg = (err as Error)?.message;
+  const message = serverText || (typeof fallbackMsg === 'string' ? fallbackMsg : 'Something went wrong.');
+  const codeStr = typeof data?.code === 'string' ? data.code : (typeof data?.error === 'string' && data.error !== message ? data.error : undefined);
+
+  return {
+    message,
+    code: codeStr,
+    action: 'none',
+    retryable: false,
+    details: Array.isArray(data?.details) ? data.details : [],
+    isGstn: false,
+    httpStatus,
+  };
+}
+
 export function apiErrorMessage(err: unknown): string {
-  return apiError(err).message;
+  const msg = apiError(err).message;
+  return typeof msg === 'string' ? msg : 'An unexpected error occurred.';
 }
 
 export function buildErrorReport(err: unknown, context?: { what?: string; where?: string }): string {
