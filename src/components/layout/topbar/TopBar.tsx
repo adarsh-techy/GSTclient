@@ -1,0 +1,125 @@
+import { useEffect, useState } from 'react';
+import { useTheme } from '../../../theme/ThemeContext';
+import { ColorPicker } from '../../ui';
+import { NotificationCenter } from '../../ui';
+
+export function Topbar() {
+  const {
+    theme,
+    toggleTheme,
+    activeAccentHex,
+    navbarThemeBg,
+    sidebarThemeBg,
+    isMobileSidebarOpen,
+    isSidebarCollapsed,
+    toggleSidebar,
+  } = useTheme();
+  const [now, setNow] = useState(() => new Date());
+
+  const isCustomBg = (navbarThemeBg || sidebarThemeBg) && theme === 'light';
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formattedDateTime =
+    now.toLocaleDateString('en-IN', {
+      weekday: 'short',
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }) +
+    ' · ' +
+    now.toLocaleTimeString('en-IN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: true,
+    });
+
+  return (
+    <header
+      className={`h-16 px-3.5 sm:px-6 md:px-8 flex items-center justify-between sticky top-0 z-40 shadow-[0_10px_35px_rgba(0,0,0,0.08)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.65)] backdrop-blur-md transition-all border-b border-slate-200/60 dark:border-slate-800/90 ${
+        isCustomBg
+          ? 'text-white'
+          : 'dark:bg-[#0f172a] text-slate-900 dark:text-slate-100'
+      }`}
+      style={{
+        backgroundColor: theme === 'dark' ? '#0f172a' : 'var(--custom-topbar-bg)',
+        color: isCustomBg ? 'var(--custom-sidebar-text)' : undefined,
+      }}
+    >
+      <div className="flex items-center gap-2 sm:gap-3">
+        
+        <button
+          type="button"
+          className={`${
+            isSidebarCollapsed ? 'flex' : 'flex lg:hidden'
+          } ${
+            isMobileSidebarOpen ? 'hidden' : ''
+          } items-center justify-center w-9 h-9 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-all cursor-pointer`}
+          onClick={toggleSidebar}
+          title="Show navigation sidebar"
+          aria-label="Show navigation sidebar"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div className="flex items-center gap-2 sm:gap-3.5">
+        
+        <div
+          className={`hidden sm:flex items-center gap-2 text-xs font-semibold mr-1 ${
+            isCustomBg ? 'text-white/90' : 'text-slate-600 dark:text-slate-300'
+          }`}
+          title="Current System Date & Time"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ color: activeAccentHex }}>
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          <span>{formattedDateTime}</span>
+        </div>
+
+        <NotificationCenter />
+
+        <button
+          type="button"
+          className="flex items-center justify-center w-9 h-9 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
+          onClick={toggleTheme}
+          title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+          aria-label={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+        >
+          {theme === 'light' ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-400">
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+          )}
+        </button>
+
+        <ColorPicker />
+      </div>
+    </header>
+  );
+}
+
+export { Topbar as TopBar, Topbar as default };
+
