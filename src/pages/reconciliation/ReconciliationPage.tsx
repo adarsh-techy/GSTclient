@@ -273,7 +273,7 @@ export function Recon() {
       ) : !data ? null : (
         <>
           
-          <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+          <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5">
             <ReconKpiCard
               label="Match Rate"
               value={`${matchRate}%`}
@@ -381,7 +381,7 @@ export function Recon() {
 
           <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3.5 p-3.5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 shadow-xs">
             
-            <div className="relative min-w-[240px] sm:min-w-[320px] max-w-md">
+            <div className="relative w-full sm:w-auto sm:min-w-[280px] sm:max-w-md flex-1">
               <input
                 type="text"
                 placeholder="Search supplier, GSTIN, invoice #, AI remarks…"

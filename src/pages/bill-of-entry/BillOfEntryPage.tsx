@@ -271,7 +271,7 @@ export function BillOfEntry() {
         </div>
       </header>
 
-      <section className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         <BoeKpiCard
           label="Total Bills of Entry"
           value={totals.count}
@@ -330,7 +330,7 @@ export function BillOfEntry() {
 
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3.5 p-3.5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 shadow-xs">
         
-        <div className="relative min-w-[240px] sm:min-w-[320px] max-w-md">
+        <div className="relative w-full sm:w-auto sm:min-w-[280px] sm:max-w-md flex-1">
           <input
             type="text"
             placeholder="Search BoE #, port code, supplier, GSTIN…"
@@ -555,8 +555,8 @@ export function BillOfEntry() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
-          <div className="w-full max-w-2xl bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="w-full max-w-[95vw] sm:max-w-2xl bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-2xl overflow-y-auto max-h-[90vh] animate-in zoom-in-95 duration-200">
             
             <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-2.5">

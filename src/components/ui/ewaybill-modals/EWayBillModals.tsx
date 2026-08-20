@@ -19,8 +19,8 @@ export function hoursSince(iso: string): number {
 
 function Overlay({ children, onClose }: { children: ReactNode; onClose: () => void }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm" onClick={onClose}>
-      <div className="w-full max-w-lg p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-y-auto max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-150" onClick={onClose}>
+      <div className="w-full max-w-[95vw] sm:max-w-lg p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-y-auto max-h-[90vh] text-slate-900 dark:text-white animate-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
         {children}
       </div>
     </div>
@@ -82,75 +82,76 @@ export function GenerateEWayBillModal({ invoice, onClose, onDone }: {
 
   return (
     <Overlay onClose={onClose}>
-      <h3 className="modal-title">Generate e-Way Bill</h3>
-      <div className="modal-meta">Invoice: <strong>{invoice.invoiceNumber}</strong> · {invoice.partyName}</div>
-      <div className="modal-meta mono">Taxable {invoice.taxableValue.toLocaleString('en-IN')} · Total {invoice.totalAmount.toLocaleString('en-IN')}</div>
+      <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">Generate e-Way Bill</h3>
+      <div className="text-xs text-slate-600 dark:text-slate-300 mb-1">Invoice: <strong className="text-slate-900 dark:text-white">{invoice.invoiceNumber}</strong> · {invoice.partyName}</div>
+      <div className="text-xs font-mono text-slate-500 mb-3">Taxable ₹{invoice.taxableValue.toLocaleString('en-IN')} · Total ₹{invoice.totalAmount.toLocaleString('en-IN')}</div>
 
-      <label className="login-label">
-        Vehicle number (required)
-        <input
-          className="login-input"
-          placeholder="KL07AB1234"
-          value={vehicleNumber}
-          onChange={(e) => setVehicleNumber(e.target.value)}
-          autoFocus
-          maxLength={15}
-        />
-      </label>
-
-      <div style={{ display: 'flex', gap: 8 }}>
-        <label className="login-label" style={{ flex: 1 }}>
-          Distance (km)
+      <div className="flex flex-col gap-3 text-xs mb-4">
+        <label className="flex flex-col gap-1 font-semibold text-slate-700 dark:text-slate-300">
+          <span>Vehicle number (required)</span>
           <input
-            type="number"
-            className="login-input"
-            placeholder="0"
-            value={distance}
-            onChange={(e) => setDistance(e.target.value)}
-            min={1}
-            max={4000}
+            className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:border-blue-500 font-mono text-xs"
+            placeholder="KL07AB1234"
+            value={vehicleNumber}
+            onChange={(e) => setVehicleNumber(e.target.value)}
+            autoFocus
+            maxLength={15}
           />
         </label>
-        <label className="login-label" style={{ flex: 1 }}>
-          Mode
-          <select className="login-input" value={mode} onChange={(e) => setMode(e.target.value as GenerateEWayBillRequest['mode'])}>
-            {MODES.map((m) => <option key={m} value={m}>{m}</option>)}
-          </select>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <label className="flex flex-col gap-1 font-semibold text-slate-700 dark:text-slate-300">
+            <span>Distance (km)</span>
+            <input
+              type="number"
+              className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:border-blue-500 text-xs"
+              placeholder="0"
+              value={distance}
+              onChange={(e) => setDistance(e.target.value)}
+              min={1}
+              max={4000}
+            />
+          </label>
+          <label className="flex flex-col gap-1 font-semibold text-slate-700 dark:text-slate-300">
+            <span>Transport Mode</span>
+            <select className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:border-blue-500 text-xs" value={mode} onChange={(e) => setMode(e.target.value as GenerateEWayBillRequest['mode'])}>
+              {MODES.map((m) => <option key={m} value={m}>{m}</option>)}
+            </select>
+          </label>
+        </div>
+
+        <label className="flex flex-col gap-1 font-semibold text-slate-700 dark:text-slate-300">
+          <span>Transporter name (optional)</span>
+          <input
+            className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:border-blue-500 text-xs"
+            placeholder="ABC Transport Co."
+            value={transporterName}
+            onChange={(e) => setTransporterName(e.target.value)}
+          />
+        </label>
+        <label className="flex flex-col gap-1 font-semibold text-slate-700 dark:text-slate-300">
+          <span>Transporter GSTIN (optional)</span>
+          <input
+            className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:border-blue-500 font-mono text-xs"
+            placeholder="32AABCT2045G1ZU"
+            value={transporterGSTIN}
+            onChange={(e) => setTransporterGSTIN(e.target.value)}
+            maxLength={15}
+          />
         </label>
       </div>
 
-      <label className="login-label">
-        Transporter name (optional)
-        <input
-          className="login-input"
-          placeholder="ABC Transport Co."
-          value={transporterName}
-          onChange={(e) => setTransporterName(e.target.value)}
-        />
-      </label>
-      <label className="login-label">
-        Transporter GSTIN (optional)
-        <input
-          className="login-input"
-          placeholder="32AABCT2045G1ZU"
-          value={transporterGSTIN}
-          onChange={(e) => setTransporterGSTIN(e.target.value)}
-          maxLength={15}
-        />
-      </label>
-
-      <div className="modal-note">
-        From GSTIN, From address, and To address are filled from the active company + this invoice's party.
-        Validity is calculated as ⌈distance ÷ 200 km⌉ days (NIC rule), minimum 1 day.
+      <div className="text-[11px] p-2.5 rounded-xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-900/40 text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
+        From GSTIN, From address, and To address are filled from active company + invoice party. Validity is calculated as ⌈distance ÷ 200 km⌉ days (NIC rule), min 1 day.
       </div>
 
-      {err ? <div className="page-state-error" style={{ marginTop: 8 }}>{err}</div> : null}
+      {err ? <div className="text-xs text-rose-600 p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 mb-3">{err}</div> : null}
 
-      <div className="modal-actions">
-        <button type="button" className="btn-primary" disabled={busy} onClick={submit}>
-          {busy ? <><span className="spinner" aria-hidden="true" />Generating…</> : 'Generate e-Way Bill'}
+      <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-slate-800 flex-wrap">
+        <button type="button" className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer" onClick={onClose} disabled={busy}>Cancel</button>
+        <button type="button" className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all cursor-pointer disabled:opacity-50 shadow-xs" disabled={busy} onClick={submit}>
+          {busy ? <><span className="spinner w-3.5 h-3.5" aria-hidden="true" />Generating…</> : 'Generate e-Way Bill'}
         </button>
-        <button type="button" className="btn-ghost" onClick={onClose} disabled={busy}>Cancel</button>
       </div>
     </Overlay>
   );
@@ -168,8 +169,6 @@ export function CancelEWayBillModal({ invoice, ewb, onClose, onDone }: {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  // 24h NIC window from generation. We display the remaining time so the
-  // operator knows whether they're at risk of timing out mid-form.
   const { hoursLeft, expired } = useMemo(() => {
     const elapsed = hoursSince(ewb.generatedDate);
     const left = 24 - elapsed;
@@ -198,19 +197,19 @@ export function CancelEWayBillModal({ invoice, ewb, onClose, onDone }: {
 
   return (
     <Overlay onClose={onClose}>
-      <h3 className="modal-title">Cancel e-Way Bill</h3>
-      <div className="modal-meta">Invoice: <strong>{invoice.invoiceNumber}</strong> · {invoice.partyName}</div>
-      <div className="modal-meta mono">EWB: {ewb.ewbNumber} · Vehicle {ewb.vehicleNumber || '—'}</div>
+      <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">Cancel e-Way Bill</h3>
+      <div className="text-xs text-slate-600 dark:text-slate-300 mb-1">Invoice: <strong className="text-slate-900 dark:text-white">{invoice.invoiceNumber}</strong> · {invoice.partyName}</div>
+      <div className="text-xs font-mono text-slate-500 mb-2">EWB: {ewb.ewbNumber} · Vehicle {ewb.vehicleNumber || '—'}</div>
       {expired ? (
-        <div className="modal-warn">⛔ 24-hour cancel window has passed. The EWB can no longer be cancelled.</div>
+        <div className="text-xs font-semibold text-rose-600 p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 mb-3">⛔ 24-hour cancel window has passed. The EWB can no longer be cancelled.</div>
       ) : (
-        <div className="modal-warn">⚠ Time remaining: {hoursLeft.toFixed(1)} h</div>
+        <div className="text-xs font-semibold text-amber-600 p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 mb-3">⚠ Time remaining: {hoursLeft.toFixed(1)} h</div>
       )}
 
-      <div className="modal-field">
-        <label>Cancel Reason:</label>
+      <div className="flex flex-col gap-1.5 mb-3 text-xs">
+        <label className="font-bold text-slate-700 dark:text-slate-300">Cancel Reason:</label>
         {CANCEL_REASONS.map((r) => (
-          <label key={r.code} className="modal-radio">
+          <label key={r.code} className="flex items-center gap-2 cursor-pointer text-slate-700 dark:text-slate-300">
             <input
               type="radio"
               name="ewb-cancel-reason"
@@ -224,10 +223,10 @@ export function CancelEWayBillModal({ invoice, ewb, onClose, onDone }: {
         ))}
       </div>
 
-      <label className="login-label">
-        Remarks (optional)
+      <label className="flex flex-col gap-1 text-xs font-bold text-slate-700 dark:text-slate-300 mb-3">
+        <span>Remarks (optional)</span>
         <textarea
-          className="login-input"
+          className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:border-blue-500 text-xs"
           rows={2}
           value={remarks}
           onChange={(e) => setRemarks(e.target.value)}
@@ -235,17 +234,17 @@ export function CancelEWayBillModal({ invoice, ewb, onClose, onDone }: {
         />
       </label>
 
-      <div className="modal-danger-note">
+      <div className="text-[11px] p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 text-rose-700 dark:text-rose-300 mb-3">
         ⚠ This action cannot be undone. After cancellation, the goods movement is no longer covered — a fresh EWB must be issued before the consignment leaves.
       </div>
 
-      {err ? <div className="page-state-error" style={{ marginTop: 8 }}>{err}</div> : null}
+      {err ? <div className="text-xs text-rose-600 p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 mb-3">{err}</div> : null}
 
-      <div className="modal-actions">
-        <button type="button" className="btn-danger" disabled={busy || expired} onClick={submit}>
-          {busy ? <><span className="spinner" aria-hidden="true" />Cancelling…</> : 'Cancel e-Way Bill'}
+      <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-slate-800 flex-wrap">
+        <button type="button" className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer" onClick={onClose} disabled={busy}>Close</button>
+        <button type="button" className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all cursor-pointer disabled:opacity-50 shadow-xs" disabled={busy || expired} onClick={submit}>
+          {busy ? <><span className="spinner w-3.5 h-3.5" aria-hidden="true" />Cancelling…</> : 'Cancel e-Way Bill'}
         </button>
-        <button type="button" className="btn-ghost" onClick={onClose} disabled={busy}>Close</button>
       </div>
     </Overlay>
   );
@@ -289,20 +288,20 @@ export function UpdateVehicleModal({ invoice, ewb, onClose, onDone }: {
 
   return (
     <Overlay onClose={onClose}>
-      <h3 className="modal-title">Update Vehicle</h3>
-      <div className="modal-meta">Invoice: <strong>{invoice.invoiceNumber}</strong> · {invoice.partyName}</div>
-      <div className="modal-meta mono">EWB: {ewb.ewbNumber}</div>
-      <div className="modal-meta">Current vehicle: <strong className="mono">{ewb.vehicleNumber || '—'}</strong></div>
+      <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white mb-2">Update Vehicle</h3>
+      <div className="text-xs text-slate-600 dark:text-slate-300 mb-1">Invoice: <strong className="text-slate-900 dark:text-white">{invoice.invoiceNumber}</strong> · {invoice.partyName}</div>
+      <div className="text-xs font-mono text-slate-500 mb-1">EWB: {ewb.ewbNumber}</div>
+      <div className="text-xs text-slate-600 dark:text-slate-300 mb-2">Current vehicle: <strong className="font-mono">{ewb.vehicleNumber || '—'}</strong></div>
       {validity.expired ? (
-        <div className="modal-warn">⛔ This e-Way Bill has expired. Vehicle can no longer be updated; issue a new EWB.</div>
+        <div className="text-xs font-semibold text-rose-600 p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 mb-3">⛔ This e-Way Bill has expired. Vehicle can no longer be updated; issue a new EWB.</div>
       ) : (
-        <div className="modal-warn">⚠ Valid until {new Date(ewb.validUntil).toLocaleString('en-IN')} · {validity.hoursLeft.toFixed(1)} h remaining</div>
+        <div className="text-xs font-semibold text-amber-600 p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 mb-3">⚠ Valid until {new Date(ewb.validUntil).toLocaleString('en-IN')} · {validity.hoursLeft.toFixed(1)} h remaining</div>
       )}
 
-      <label className="login-label">
-        New vehicle number
+      <label className="flex flex-col gap-1 text-xs font-bold text-slate-700 dark:text-slate-300 mb-3">
+        <span>New vehicle number</span>
         <input
-          className="login-input"
+          className="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white outline-none focus:border-blue-500 font-mono text-xs"
           placeholder="KL07XY9999"
           value={vehicleNumber}
           onChange={(e) => setVehicleNumber(e.target.value)}
@@ -312,17 +311,17 @@ export function UpdateVehicleModal({ invoice, ewb, onClose, onDone }: {
         />
       </label>
 
-      <div className="modal-note">
-        Typical reasons: vehicle breakdown / transshipment / re-routing. The EWB itself stays the same (number, validity, parties) — only the vehicle assignment is rewritten.
+      <div className="text-[11px] p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 mb-3">
+        Typical reasons: vehicle breakdown / transshipment / re-routing. The EWB number and validity remain unchanged.
       </div>
 
-      {err ? <div className="page-state-error" style={{ marginTop: 8 }}>{err}</div> : null}
+      {err ? <div className="text-xs text-rose-600 p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 mb-3">{err}</div> : null}
 
-      <div className="modal-actions">
-        <button type="button" className="btn-primary" disabled={busy || validity.expired} onClick={submit}>
-          {busy ? <><span className="spinner" aria-hidden="true" />Updating…</> : 'Update Vehicle'}
+      <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-100 dark:border-slate-800 flex-wrap">
+        <button type="button" className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer" onClick={onClose} disabled={busy}>Close</button>
+        <button type="button" className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all cursor-pointer disabled:opacity-50 shadow-xs" disabled={busy || validity.expired} onClick={submit}>
+          {busy ? <><span className="spinner w-3.5 h-3.5" aria-hidden="true" />Updating…</> : 'Update Vehicle'}
         </button>
-        <button type="button" className="btn-ghost" onClick={onClose} disabled={busy}>Close</button>
       </div>
     </Overlay>
   );

@@ -86,8 +86,8 @@ function BulkRunDialog({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm" onClick={state.running ? undefined : onClose}>
-      <div className="w-full max-w-2xl p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-y-auto max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-150" onClick={state.running ? undefined : onClose}>
+      <div className="w-full max-w-[95vw] sm:max-w-2xl p-5 sm:p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl overflow-y-auto max-h-[90vh] text-slate-900 dark:text-white animate-in zoom-in-95 duration-200" onClick={(e) => e.stopPropagation()}>
         <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-3">{title} — {data.period}</h3>
 
         {!started ? (

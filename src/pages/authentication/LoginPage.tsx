@@ -31,7 +31,7 @@ export function Login() {
       try {
         localStorage.setItem('gst_public_tenants', JSON.stringify(data));
       } catch {
-        
+        // Ignore storage quotas
       }
       return data;
     },
@@ -74,15 +74,11 @@ export function Login() {
     setError(null);
     setSubmitting(true);
     try {
-      
       const authPromise = apiLogin({ username: username.trim(), password });
-      
       const timerPromise = new Promise((resolve) => setTimeout(resolve, 3400));
-      
       const [authResponse] = await Promise.all([authPromise, timerPromise]);
 
       commitAuth(authResponse);
-
       navigate(from, { replace: true });
     } catch (err) {
       setSubmitting(false);
@@ -92,7 +88,7 @@ export function Login() {
 
   return (
     <div className="min-h-screen w-full flex flex-col md:flex-row bg-slate-950 overflow-x-hidden">
-      
+      {/* Buffer Splash Loading Screen */}
       {submitting ? (
         <div className="fixed inset-0 bg-slate-950 z-[99999] flex items-center justify-center p-6">
           <img
@@ -102,15 +98,12 @@ export function Login() {
           />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#020617_85%)] pointer-events-none" />
           <div className="relative z-10 flex flex-col items-center gap-6 text-center">
-            
             <div className="relative w-72 sm:w-96 h-28 sm:h-36 flex items-center justify-center">
-              
               <img
                 src={caroLogoDark}
                 alt="Carol Solutions Base"
                 className="max-w-full max-h-full object-contain opacity-25"
               />
-              
               <img
                 src={caroLogoDark}
                 alt="Carol Solutions Filling"
@@ -132,8 +125,8 @@ export function Login() {
         </div>
       ) : null}
 
+      {/* Left Column: Branding Showcase */}
       <div className="relative md:w-[58%] lg:w-[62%] min-h-[400px] md:min-h-screen bg-slate-950 flex flex-col justify-end p-8 sm:p-12 lg:p-16 text-white overflow-hidden">
-        
         <img
           src={loginPageImg}
           alt="GSTAutoPilot Illustration"
@@ -180,21 +173,22 @@ export function Login() {
         </div>
       </div>
 
-      <div className="md:w-[42%] lg:w-[38%] min-h-screen bg-white dark:bg-[#0f172a] flex flex-col justify-between p-8 sm:p-12 lg:p-14 text-slate-900 dark:text-white z-20 shadow-2xl">
+      {/* Right Column: Always Light Theme Form */}
+      <div className="md:w-[42%] lg:w-[38%] min-h-screen bg-white flex flex-col justify-between p-8 sm:p-12 lg:p-14 text-slate-900 z-20 shadow-2xl">
         <div className="w-full max-w-sm mx-auto my-auto flex flex-col">
-          
+          {/* Logo & Headline */}
           <div className="flex flex-col items-center text-center mb-6">
             <img src={caroLogo} alt="Carol Solutions" className="w-56 sm:w-64 h-auto object-contain -mb-3 sm:-mb-4 drop-shadow-xs" />
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-[320px]">
+            <p className="text-xs text-slate-500 leading-relaxed max-w-[320px]">
               Streamline your GST compliance with Carol Solutions automated filing &amp; reconciliation engine.
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            
+            {/* Multi-Tenant Selector */}
             {tenants.length > 1 ? (
               <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400" htmlFor="company-select">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600" htmlFor="company-select">
                   Company / Tenant Organization
                 </label>
                 <div className="relative flex items-center">
@@ -212,7 +206,7 @@ export function Login() {
                   </span>
                   <select
                     id="company-select"
-                    className="w-full pl-10 pr-8 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-xs font-semibold outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all appearance-none cursor-pointer"
+                    className="w-full pl-10 pr-8 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-800 text-xs font-semibold outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all appearance-none cursor-pointer"
                     value={tenantId}
                     onChange={(e) => onTenantChange(e.target.value)}
                     disabled={submitting}
@@ -227,8 +221,9 @@ export function Login() {
               </div>
             ) : null}
 
+            {/* Username Input */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400" htmlFor="username-input">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600" htmlFor="username-input">
                 Username / User Code
               </label>
               <div className="relative flex items-center">
@@ -241,7 +236,7 @@ export function Login() {
                 <input
                   id="username-input"
                   type="text"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#d2e2fa] dark:border-blue-900/60 bg-[#edf4fe] dark:bg-blue-950/30 text-slate-900 dark:text-white text-xs font-semibold outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/10 transition-all placeholder:text-slate-400"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#d2e2fa] bg-[#edf4fe] text-slate-900 text-xs font-semibold outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/10 transition-all placeholder:text-slate-400"
                   placeholder="GUEST"
                   autoComplete="username"
                   autoFocus
@@ -253,8 +248,9 @@ export function Login() {
               </div>
             </div>
 
+            {/* Password Input */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400" htmlFor="password-input">
+              <label className="text-[11px] font-bold uppercase tracking-wider text-slate-600" htmlFor="password-input">
                 Security Password
               </label>
               <div className="relative flex items-center">
@@ -267,7 +263,7 @@ export function Login() {
                 <input
                   id="password-input"
                   type={showPassword ? 'text' : 'password'}
-                  className="w-full pl-10 pr-10 py-3 rounded-xl border border-[#d2e2fa] dark:border-blue-900/60 bg-[#edf4fe] dark:bg-blue-950/30 text-slate-900 dark:text-white text-xs font-semibold outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/10 transition-all placeholder:text-slate-400"
+                  className="w-full pl-10 pr-10 py-3 rounded-xl border border-[#d2e2fa] bg-[#edf4fe] text-slate-900 text-xs font-semibold outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-500/10 transition-all placeholder:text-slate-400"
                   placeholder="••••••••"
                   autoComplete="current-password"
                   value={password}
@@ -277,7 +273,7 @@ export function Login() {
                 />
                 <button
                   type="button"
-                  className="absolute right-3 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer p-1"
+                  className="absolute right-3 text-slate-400 hover:text-slate-600 cursor-pointer p-1"
                   onClick={() => setShowPassword(!showPassword)}
                   title={showPassword ? 'Hide password' : 'Show password'}
                   tabIndex={-1}
@@ -297,8 +293,9 @@ export function Login() {
               </div>
             </div>
 
+            {/* Error Message Display */}
             {error ? (
-              <div className="flex items-center gap-2 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs font-semibold">
+              <div className="flex items-center gap-2 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="12" r="10" />
                   <line x1="12" y1="8" x2="12" y2="12" />
@@ -308,6 +305,7 @@ export function Login() {
               </div>
             ) : null}
 
+            {/* Submit Action */}
             <button
               type="submit"
               className="w-full py-2.5 px-4 rounded-xl bg-[#2563eb] hover:bg-[#1d4ed8] active:bg-[#1e40af] text-white text-xs font-bold shadow-md shadow-blue-600/30 flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-60 mt-1"
@@ -327,10 +325,11 @@ export function Login() {
             </button>
           </form>
 
-          <div className="mt-8 text-center text-xs text-slate-400 dark:text-slate-500">
+          {/* Footer Attribution */}
+          <div className="mt-8 text-center text-xs text-slate-400">
             <span>Developed by </span>
-            <span className="font-bold text-red-500 dark:text-red-400">Carol</span>
-            <span className="font-bold text-blue-500 dark:text-blue-400">Solutions</span>
+            <span className="font-bold text-red-500">Carol</span>
+            <span className="font-bold text-blue-500">Solutions</span>
             <span> @2026</span>
           </div>
         </div>

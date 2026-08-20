@@ -420,7 +420,7 @@ export function Gstr2b() {
 
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3.5 p-3.5 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 shadow-xs">
         
-        <div className="relative min-w-[240px] sm:min-w-[320px] max-w-md">
+        <div className="relative w-full sm:w-auto sm:min-w-[280px] sm:max-w-md flex-1">
           <input
             type="text"
             placeholder={`Search ${currentTabDef.placeholder}…`}

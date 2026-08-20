@@ -373,7 +373,7 @@ export function Dashboard() {
 
       <section className="p-6 rounded-2xl bg-white dark:bg-[#151d2a] border border-slate-200/70 dark:border-slate-800/80 shadow-sm flex flex-col gap-4">
         <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Carry-forward to next period</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-800">
             <div className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">IGST</div>
             <div className="text-base font-extrabold text-slate-800 dark:text-slate-100 mt-1">{fmt(data.carryForward.igst)}</div>

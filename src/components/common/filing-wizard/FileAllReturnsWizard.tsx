@@ -21,15 +21,15 @@ export function FileAllReturnsWizard({ period, onClose }: { period: string; onCl
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-xs animate-in fade-in duration-150"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700/80 flex flex-col max-h-[90vh] overflow-hidden"
+        className="relative w-full max-w-[95vw] sm:max-w-2xl bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700/80 flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/60 rounded-t-2xl">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-200 dark:border-slate-700/80 bg-slate-50 dark:bg-slate-800/60 rounded-t-3xl">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm flex-shrink-0">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">

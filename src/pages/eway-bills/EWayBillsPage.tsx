@@ -195,7 +195,7 @@ export function EWayBills() {
         </div>
       </header>
 
-      <section className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         <div className="p-4 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/80 shadow-xs flex flex-col gap-1.5">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total EWBs</span>

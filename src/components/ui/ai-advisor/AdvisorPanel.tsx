@@ -95,18 +95,18 @@ export function AdvisorPanel() {
       {!open ? (
         <button
           type="button"
-          className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs shadow-xl shadow-blue-500/25 hover:shadow-2xl hover:scale-105 active:scale-95 transition-all cursor-pointer border border-white/20"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex items-center gap-2 px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-xs shadow-xl shadow-blue-500/25 hover:shadow-2xl hover:scale-105 active:scale-95 transition-all cursor-pointer border border-white/20"
           onClick={() => setOpen(true)}
           title="Ask the GST advisor"
         >
           <span aria-hidden="true" className="text-base">💬</span>
-          <span>GST Advisor</span>
+          <span className="hidden xs:inline sm:inline">GST Advisor</span>
         </button>
       ) : null}
 
       {open && (
         <div
-          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-32px)] max-w-sm sm:w-[400px] h-[540px] max-h-[calc(100vh-80px)] rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+          className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-24px)] max-w-sm sm:w-[400px] h-[520px] max-h-[calc(100vh-70px)] rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150"
           role="dialog"
           aria-label="GST advisor"
         >
