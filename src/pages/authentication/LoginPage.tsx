@@ -23,6 +23,21 @@ export function Login() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  // Preload and decode splash animation images immediately on mount so they appear with 0ms delay
+  useEffect(() => {
+    const preloadAsset = (src: string) => {
+      const img = new Image();
+      img.src = src;
+      if (typeof img.decode === 'function') {
+        img.decode().catch(() => {});
+      }
+    };
+    preloadAsset(caroLogoDark);
+    preloadAsset(bufferImg);
+    preloadAsset(caroLogo);
+    preloadAsset(loginPageImg);
+  }, []);
+
   const [tenantId, setTenantId] = useState<string>(getActiveTenantId());
   const tenantsQuery = useQuery<TenantSummary[]>({
     queryKey: ['public-tenants'],
@@ -88,12 +103,20 @@ export function Login() {
 
   return (
     <div className="min-h-screen w-full flex flex-col md:flex-row bg-slate-950 overflow-x-hidden">
+      {/* Hidden eager-loaded DOM references ensuring GPU textures are warm */}
+      <div className="sr-only opacity-0 pointer-events-none -z-50 absolute w-0 h-0 overflow-hidden" aria-hidden="true">
+        <img src={caroLogoDark} alt="" loading="eager" decoding="sync" />
+        <img src={bufferImg} alt="" loading="eager" decoding="sync" />
+      </div>
+
       {/* Buffer Splash Loading Screen */}
       {submitting ? (
         <div className="fixed inset-0 bg-slate-950 z-[99999] flex items-center justify-center p-6">
           <img
             src={bufferImg}
             alt="Buffer Background"
+            loading="eager"
+            decoding="sync"
             className="absolute inset-0 w-full h-full object-cover opacity-25 pointer-events-none"
           />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#020617_85%)] pointer-events-none" />
@@ -102,11 +125,15 @@ export function Login() {
               <img
                 src={caroLogoDark}
                 alt="Carol Solutions Base"
+                loading="eager"
+                decoding="sync"
                 className="max-w-full max-h-full object-contain opacity-25"
               />
               <img
                 src={caroLogoDark}
                 alt="Carol Solutions Filling"
+                loading="eager"
+                decoding="sync"
                 className="absolute inset-0 m-auto max-w-full max-h-full object-contain drop-shadow-[0_0_20px_rgba(255,255,255,0.65)]"
                 style={{ animation: 'logoWhiteFill 3.4s linear forwards' }}
               />
@@ -130,6 +157,8 @@ export function Login() {
         <img
           src={loginPageImg}
           alt="GSTAutoPilot Illustration"
+          loading="eager"
+          decoding="sync"
           className="absolute inset-0 w-full h-full object-cover opacity-60"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/20" />
@@ -178,7 +207,7 @@ export function Login() {
         <div className="w-full max-w-sm mx-auto my-auto flex flex-col">
           {/* Logo & Headline */}
           <div className="flex flex-col items-center text-center mb-6">
-            <img src={caroLogo} alt="Carol Solutions" className="w-56 sm:w-64 h-auto object-contain -mb-3 sm:-mb-4 drop-shadow-xs" />
+            <img src={caroLogo} alt="Carol Solutions" loading="eager" decoding="sync" className="w-56 sm:w-64 h-auto object-contain -mb-3 sm:-mb-4 drop-shadow-xs" />
             <p className="text-xs text-slate-500 leading-relaxed max-w-[320px]">
               Streamline your GST compliance with Carol Solutions automated filing &amp; reconciliation engine.
             </p>
