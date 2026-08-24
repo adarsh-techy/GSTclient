@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTheme } from '../../../theme/ThemeContext';
-import { ColorPicker, NotificationCenter } from '../../ui';
+import { ColorPicker, FilingDeadlineButton, NotificationCenter } from '../../ui';
 
 export function Topbar() {
   const {
@@ -88,6 +88,9 @@ export function Topbar() {
           </svg>
           <span className="text-[11.5px]">{formattedDateTime}</span>
         </div>
+
+        {/* Filing Deadlines & Reminders Button */}
+        <FilingDeadlineButton />
 
         {/* Notifications Popover */}
         <NotificationCenter />

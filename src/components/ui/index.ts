@@ -7,3 +7,4 @@ export * from './theme-modal/ThemeCustomizerModal';
 export * from './ai-advisor/AdvisorPanel';
 export * from './einvoice-modals/EInvoiceModals';
 export * from './ewaybill-modals/EWayBillModals';
+export * from './filing-reminder/FilingDeadlineModal';
