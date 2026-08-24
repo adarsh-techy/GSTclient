@@ -45,7 +45,10 @@ if (!DEFAULT_TENANT_ID) {
   console.warn('[GSTAutoPilot] VITE_DEFAULT_TENANT_ID is not set — backend will reject requests with 404.');
 }
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim();
+let API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim();
+if (API_BASE_URL && !/^https?:\/\//i.test(API_BASE_URL)) {
+  API_BASE_URL = `http://${API_BASE_URL}`;
+}
 
 export const apiClient = axios.create({
   baseURL: import.meta.env.DEV ? '/api' : (API_BASE_URL ? `${API_BASE_URL.replace(/\/+$/, '')}/api` : '/api'),
