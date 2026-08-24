@@ -75,7 +75,7 @@ export function Topbar() {
       <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
         {/* Date & Time Widget */}
         <div
-          className={`hidden sm:flex items-center gap-2 text-xs font-semibold mr-1 px-3 py-1.5 rounded-xl bg-slate-100/50 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-800/50 ${
+          className={`hidden sm:flex items-center gap-2 text-xs font-semibold mr-1 ${
             isCustomBg ? 'text-white/90' : 'text-slate-600 dark:text-slate-300'
           }`}
           title="Current System Date & Time"
