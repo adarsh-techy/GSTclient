@@ -1,32 +1,7 @@
-import { useEffect, useState, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 import { useTheme } from '../../../theme/ThemeContext';
 import { useAuth } from '../../../auth/AuthContext';
-import { fetchCompany } from '../../../api';
 import { ColorPicker, NotificationCenter } from '../../ui';
-
-interface PageMeta {
-  section: string;
-  title: string;
-  icon: string;
-}
-
-const ROUTE_META_MAP: Record<string, PageMeta> = {
-  '/': { section: 'Main Menu', title: 'Dashboard', icon: '📊' },
-  '/invoices': { section: 'Main Menu', title: 'Invoices', icon: '📑' },
-  '/einvoice-history': { section: 'Main Menu', title: 'e-Invoice History', icon: '🧾' },
-  '/ewaybills': { section: 'Main Menu', title: 'e-Way Bills', icon: '🚚' },
-  '/gstr1': { section: 'GST Returns', title: 'GSTR-1 Return', icon: '📤' },
-  '/gstr2b': { section: 'GST Returns', title: 'GSTR-2B ITC', icon: '📥' },
-  '/gstr3b': { section: 'GST Returns', title: 'GSTR-3B Return', icon: '📋' },
-  '/bill-of-entry': { section: 'GST Returns', title: 'Bill of Entry', icon: '🛡️' },
-  '/recon': { section: 'Audit & Recon', title: 'Reconciliation', icon: '🔍' },
-  '/filings': { section: 'Audit & Recon', title: 'Filings Audit Log', icon: '📁' },
-  '/users': { section: 'Administration', title: 'User Permissions', icon: '👥' },
-  '/settings': { section: 'Administration', title: 'System Settings', icon: '⚙️' },
-  '/onboarding': { section: 'Administration', title: 'Client Onboarding', icon: '🏢' },
-};
 
 export function Topbar() {
   const {
@@ -41,14 +16,7 @@ export function Topbar() {
   } = useTheme();
 
   const { user, logout } = useAuth();
-  const location = useLocation();
   const [now, setNow] = useState(() => new Date());
-
-  const companyQuery = useQuery({
-    queryKey: ['company'],
-    queryFn: fetchCompany,
-    staleTime: 10 * 60 * 1000,
-  });
 
   const isCustomBg = (navbarThemeBg || sidebarThemeBg) && theme === 'light';
 
@@ -56,14 +24,6 @@ export function Topbar() {
     const timer = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
-
-  const pageMeta = useMemo<PageMeta>(() => {
-    const path = location.pathname;
-    return ROUTE_META_MAP[path] ?? { section: 'Workspace', title: 'GSTAutoPilot', icon: '✨' };
-  }, [location.pathname]);
-
-  const companyName = companyQuery.data?.companyName || 'Carol Solutions';
-  const gstin = companyQuery.data?.gstin || '';
 
   const formattedDateTime =
     now.toLocaleDateString('en-IN', {
@@ -92,15 +52,15 @@ export function Topbar() {
         color: isCustomBg ? 'var(--custom-sidebar-text)' : undefined,
       }}
     >
-      {/* Left Section: Sidebar Toggle + Active Page Breadcrumb + Company Badge */}
-      <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 mr-2">
+      {/* Left Section: Sidebar Toggle Button */}
+      <div className="flex items-center gap-2 sm:gap-3">
         <button
           type="button"
           className={`${
             isSidebarCollapsed ? 'flex' : 'flex lg:hidden'
           } ${
             isMobileSidebarOpen ? 'hidden' : ''
-          } items-center justify-center w-9 h-9 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-all cursor-pointer shrink-0 border border-slate-200/50 dark:border-slate-700/50`}
+          } items-center justify-center w-9 h-9 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 transition-all cursor-pointer border border-slate-200/50 dark:border-slate-700/50`}
           onClick={toggleSidebar}
           title="Show navigation sidebar"
           aria-label="Show navigation sidebar"
@@ -111,37 +71,6 @@ export function Topbar() {
             <line x1="3" y1="18" x2="21" y2="18" />
           </svg>
         </button>
-
-        {/* Active Page Breadcrumbs */}
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="hidden sm:inline-flex text-base shrink-0 select-none" aria-hidden="true">
-            {pageMeta.icon}
-          </span>
-          <div className="flex flex-col min-w-0">
-            <div className="flex items-center gap-1.5 text-[10.5px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider leading-none truncate">
-              <span>{pageMeta.section}</span>
-              <span className="text-[9px]">/</span>
-            </div>
-            <h2 className="text-xs sm:text-sm font-black tracking-tight text-slate-900 dark:text-white truncate leading-tight mt-0.5">
-              {pageMeta.title}
-            </h2>
-          </div>
-        </div>
-
-        {/* Active Company Badge */}
-        <div className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-100/80 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-xs ml-2 min-w-0 max-w-[260px] lg:max-w-xs shadow-2xs">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-pulse" />
-          <div className="flex flex-col min-w-0">
-            <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200 truncate leading-tight" title={companyName}>
-              {companyName}
-            </span>
-            {gstin && (
-              <span className="text-[9.5px] font-mono font-medium text-slate-500 dark:text-slate-400 truncate leading-tight">
-                GSTIN: {gstin}
-              </span>
-            )}
-          </div>
-        </div>
       </div>
 
       {/* Right Section: System Time, Notifications, Theme, Color, User Profile */}
