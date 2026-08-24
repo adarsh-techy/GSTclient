@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useTheme } from '../../../theme/ThemeContext';
-import { useAuth } from '../../../auth/AuthContext';
 import { ColorPicker, NotificationCenter } from '../../ui';
 
 export function Topbar() {
@@ -15,7 +14,6 @@ export function Topbar() {
     toggleSidebar,
   } = useTheme();
 
-  const { user, logout } = useAuth();
   const [now, setNow] = useState(() => new Date());
 
   const isCustomBg = (navbarThemeBg || sidebarThemeBg) && theme === 'light';
@@ -73,11 +71,11 @@ export function Topbar() {
         </button>
       </div>
 
-      {/* Right Section: System Time, Notifications, Theme, Color, User Profile */}
+      {/* Right Section: System Time, Notifications, Theme, Color */}
       <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
         {/* Date & Time Widget */}
         <div
-          className={`hidden xl:flex items-center gap-2 text-xs font-semibold mr-1 px-3 py-1.5 rounded-xl bg-slate-100/50 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-800/50 ${
+          className={`hidden sm:flex items-center gap-2 text-xs font-semibold mr-1 px-3 py-1.5 rounded-xl bg-slate-100/50 dark:bg-slate-800/40 border border-slate-200/50 dark:border-slate-800/50 ${
             isCustomBg ? 'text-white/90' : 'text-slate-600 dark:text-slate-300'
           }`}
           title="Current System Date & Time"
@@ -123,33 +121,6 @@ export function Topbar() {
 
         {/* Palette & Theme Customizer */}
         <ColorPicker />
-
-        {/* User Pill / Quick Logout */}
-        {user ? (
-          <div className="flex items-center gap-1.5 pl-1 sm:pl-2 border-l border-slate-200 dark:border-slate-700/80">
-            <div className="hidden lg:flex flex-col items-end text-right">
-              <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200 leading-tight truncate max-w-[110px]">
-                {user.displayName || user.emplCode}
-              </span>
-              <span className="text-[9.5px] font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 leading-tight">
-                {user.role}
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={logout}
-              className="p-1.5 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-all cursor-pointer"
-              title="Sign Out of Workspace"
-              aria-label="Sign Out"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <polyline points="16 17 21 12 16 7" />
-                <line x1="21" y1="12" x2="9" y2="12" />
-              </svg>
-            </button>
-          </div>
-        ) : null}
       </div>
     </header>
   );
